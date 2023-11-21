@@ -1,14 +1,11 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Server {
-    private static ArrayList<ClientHandler> clients = new ArrayList<>();
+    private static HashMap<String, ClientHandler> clients = new HashMap<>();
     private static int clientCounter = 0;
 
     public static void main(String[] args) {
@@ -20,7 +17,7 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New client connected: " + "Client-" + clientCounter);
                 ClientHandler clientHandler = new ClientHandler(clientSocket, "Client-" + clientCounter);
-                clients.add(clientHandler);
+                clients.put(clientHandler.getClientName(), clientHandler);
                 sendPreviousMessages(clientHandler);
                 new Thread(clientHandler).start();
                 clientCounter++;
@@ -32,7 +29,7 @@ public class Server {
 
     static void broadcastMessage(String message, ClientHandler sender) {
         logEvent(sender.getClientName() + ": " + message);
-        for (ClientHandler client : clients) {
+        for (ClientHandler client : clients.values()) {
             if (client != sender) {
                 client.sendMessage(sender.getClientName() + ": " + message);
             }
@@ -49,7 +46,6 @@ public class Server {
             e.printStackTrace();
         }
     }
-
 
     private static void logEvent(String message) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("server.log", true))) {
