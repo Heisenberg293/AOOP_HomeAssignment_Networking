@@ -11,7 +11,7 @@ class ClientHandler implements Runnable {
 
     public ClientHandler(Socket clientSocket, String clientName) {
         this.clientSocket = clientSocket;
-        this.clientName = clientName;
+        this.clientName = "Hasib";
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new Scanner(clientSocket.getInputStream());
