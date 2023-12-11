@@ -7,7 +7,7 @@ public class Client {
     public static void main(String[] args) {
         try {
             Socket socket = new Socket("127.0.0.1", 8080);
-            System.out.println("Client Connected");
+            System.out.println("Client is Connected");
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             Scanner scanner = new Scanner(System.in);
 

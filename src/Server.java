@@ -18,7 +18,6 @@ public class Server {
                 System.out.println("New client connected: " + "Client-" + clientCounter);
                 ClientHandler clientHandler = new ClientHandler(clientSocket, "Client-" + clientCounter);
                 clients.put(clientHandler.getClientName(), clientHandler);
-                sendPreviousMessages(clientHandler);
                 new Thread(clientHandler).start();
                 clientCounter++;
             }
@@ -28,7 +27,6 @@ public class Server {
     }
 
     static void broadcastMessage(String message, ClientHandler sender) {
-        logEvent(sender.getClientName() + ": " + message);
         for (ClientHandler client : clients.values()) {
             if (client != sender) {
                 client.sendMessage(sender.getClientName() + ": " + message);
@@ -36,22 +34,4 @@ public class Server {
         }
     }
 
-    private static void sendPreviousMessages(ClientHandler clientHandler) {
-        try (Scanner logScanner = new Scanner(new File("C:\\Users\\USER\\Documents\\GitHub\\AOOP_HomeAssignment_Networking\\src\\previousMassage.txt"))) {
-            while (logScanner.hasNextLine()) {
-                String message = logScanner.nextLine();
-                clientHandler.sendMessage(message);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void logEvent(String message) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("C:\\Users\\USER\\Documents\\GitHub\\AOOP_HomeAssignment_Networking\\src\\previousMassage.txt", true))) {
-            writer.println(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
